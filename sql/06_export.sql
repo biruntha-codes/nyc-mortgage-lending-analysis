@@ -1,10 +1,25 @@
--- one row per application for tableau, keeping it at application level
--- rather than pre-aggregating so the dashboard can slice any direction
--- without a re-export. hdma codes translated to kavels here so nothing
--- in tableau needs a lookup.
+-- 06_export.sql
+-- Builds the CSV the Tableau dashboard runs on.
+--
+-- One row per application rather than pre-aggregated so the dashboard can
+-- slice by county, income band or denial reason without needing to go back
+-- to SQL. HMDA codes are translated to labels here so nothing in Tableau
+-- needs a lookup.
+--
+-- Demographic columns (derived_race, derived_ethnicity,
+-- tract_minority_population_percent) are deliberately excluded. This analysis
+-- is about denial reasons and property characteristics not applicant
+-- demographics.
+--
+-- No dot commands in this file, they would corrupt the CSV. The header and
+-- format flags go on the command line instead:
+-- sqlite3 hmda.db -header -csv <sql/06_export.sql > tableau/dashboard_data.csv
+
+-- Kept the 13 counties with enough volume to matter, the rest have been
+-- bucketed.
 
 SELECT
-county_code, 
+county_code,
 CASE county_code
 	WHEN '36005' THEN 'Bronx'
 	WHEN '36047' THEN 'Brooklyn'
@@ -15,6 +30,7 @@ CASE county_code
 	WHEN '36103' THEN 'Suffolk'
 	WHEN '36119' THEN 'Westchester'
 	WHEN '36087' THEN 'Rockland'
+	WHEN '36079' THEN 'Putnam'
 	WHEN '36029' THEN 'Erie'
 	WHEN '36055' THEN 'Monroe'
 	WHEN '36067' THEN 'Onondaga'
@@ -26,6 +42,8 @@ CASE
 	WHEN county_code IN ('36059','36103','36119','36087','36079') THEN 'Downstate suburbs'
 	ELSE 'Rest of state'
 END AS region,
+-- 0/1 rather than keeping action_taken, because the average of this column is
+-- the denial rate.
 CASE WHEN action_taken = '3' THEN 1 ELSE 0 END AS denied,
 CASE
 	WHEN CAST(income AS REAL) <= 0 THEN 'unknown'

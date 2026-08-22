@@ -1,13 +1,20 @@
+-- 05_denial_reasons.sql
+-- Question: Why do applications get denied and how does that differ by market?
+-- Answer: The two biggest reasons swap places. Collateral is 40.9% of Bronx
+-- denials against 15.6% in Suffolk. Debt-to-income is 45.0% in Suffolk against
+-- 23.1% in the Bronx. Credit history sits at about 9% in both which is what
+-- rules out borrower credit quality as the explanation.
+
 .headers on
 .mode column
 
--- the cfpb export uses hyphens on numbered columns (denial_reason-1,
--- aus-1, applicant_race-1) do they need square brackets, otherwise
--- sqlite reads the hyphen as minus.
+-- The CFPB export uses hyphens on numbered columns (denial_reason-1,
+-- derived_msa-md, aus-1) so they need square brackets, otherwise SQLite reads
+-- the hyphen as minus.
 
--- why denials happen, bronx vs suffolk
-SELECT 
-CASE county_code WHEN '36005' THEN 'Bronx' 
+-- Why denials happen: Bronx vs Suffolk
+SELECT
+CASE county_code WHEN '36005' THEN 'Bronx'
 		  WHEN '36103' THEN 'Suffolk'
 		  END AS county,
 [denial_reason-1] AS reason,
@@ -19,12 +26,12 @@ AND action_taken = '3'
 GROUP BY county_code, reason
 ORDER BY county, n DESC;
 
--- housing type as an alternative explanation. The Bronx has more 2-4
--- unit stock and that appraises differently. If it were driving the 
--- gap, single family should look similar across counties. It doesn;t.
+-- Housing type as an alternative explanation. The Bronx has more 2-4
+-- unit stock and that appraises differently. If it were driving the
+-- gap, single family should look similar across counties. It does not.
 
 SELECT
-CASE county_code WHEN '36005' THEN 'Bronx' 
+CASE county_code WHEN '36005' THEN 'Bronx'
 		 WHEN '36103' THEN 'Suffolk'
 		 END AS county,
 total_units,

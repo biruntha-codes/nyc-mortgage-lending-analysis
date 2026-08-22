@@ -1,10 +1,17 @@
+-- 04_income_bands.sql
+-- Question: Does income explain the Bronx gap?
+-- Answer: No, the gap holds in every income band and peaks at 2.6x in the
+-- $100-$150k range. Even above $250k it is 12.4% vs 5.8%.
+
 .headers on
 .mode column
 
--- the obvious objection to the county gap is income: the bronx is
--- poorer, so of course more denials. this tests it against suffolk,
--- the lowest-denial big county downstate. income is reported in
--- thousands, so 50 = $50k.
+-- Income would appear to be the obvious explanation for the county gap.
+-- This checks whether that is true.
+-- Suffolk is the comparison since it has the most applications of any county
+-- in the data and is the nearest large suburban market.
+--
+-- Income is reported in thousands so 50 = $50k.
 
 SELECT
   CASE county_code
