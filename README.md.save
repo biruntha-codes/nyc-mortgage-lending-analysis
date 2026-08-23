@@ -1,0 +1,41 @@
+ortgage Applications Fail in New York?
+
+The Bronx, more than anywhere else in the state of New York.
+
+| County | Denial Rate | Applications |
+|---|---|---|
+| Bronx | 21.3% | 2,271 |
+| Queens | 15.4% | 9,112|
+| Brooklyn | 14.4% | 6,938 |
+| Manhattan | 12.5% | 5,211 |
+| Rockland | 10.4% | 2,254 |
+| Staten Island | 9.9% | 3,108 |
+| Westchester | 9.3% | 7,034 |
+| Nassau | 9.0% | 9,250 |
+| Onondaga | 8.7% | 4,002 |
+| Suffolk | 8.4% | 11,865 |
+| Erie | 8.1% | 7,968 |
+| Albany | 7.7% | 2,509 |
+| Monroe | 5.8% | 6,571 |
+
+21.3% is higher than every rural upstate county. It is two and a half times higher than Suffolk while Suffolk has the highest applications of any county in the data.
+
+### Is it just is poorer?
+
+That was the first thing I checked and it is not.
+
+![Denial rate by income band, Bronx above Suffolk in every band](images/income_bands.png)
+
+|  Household Income | Bronx | Suffolk | Ratio |
+|---|---|---|---|
+| under $50k | 56.3% | 49.0% | 1.1x |
+| $50-$100k | 30.1% | 17.9% | 1.7x |
+| $100-$150k | 21.1% | 8.1% | 2.6x |
+| $150-$250k | 14.3% | 6.0% | 2.4x |
+| $250k+ | 12.4% | 5.8% | 2.1x |
+
+The gap is there in every band and it is widest in the middle. A Bronx household earning $100-$150k gets denied more often than a Suffolk household earning half that. Even households earning over $250k are still denied at more than twice of Suffolk's rate.
+
+
+
+
