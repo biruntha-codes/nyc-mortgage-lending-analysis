@@ -258,7 +258,7 @@ The raw CSV and the SQLite database are not in this repo. Both rebuild from the
 first command.
 
 | File | What it does |
-|---|---|---|
+|---|---|
 | '01_profile.sql' | What is in the raw file before filtering |
 | '02_clean.sql' | Narrowing to home purchase loans people will live in |
 | '03_denial_rate.sql' | Denial rate by county |
