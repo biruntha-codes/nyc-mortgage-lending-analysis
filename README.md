@@ -259,13 +259,12 @@ first command.
 
 | File | What it does |
 |---|---|
-| '01_profile.sql' | What is in the raw file before filtering |
-| '02_clean.sql' | Narrowing to home purchase loans people will live in |
-| '03_denial_rate.sql' | Denial rate by county |
-| '04_income_bands.sql' | Testing whether income explains the gap |
-| '05_denial_reasons' | Why applications get denied and whether housing types
-explains it |
-| '06_export.sql' | Building the file the dashboard runs on |
+|`01_profile.sql` | What is in the raw file before filtering |
+| `02_clean.sql` | Narrowing to home purchase loans people will live in |
+| `03_denial_rate.sql` | Denial rate by county |
+| `04_income_bands.sql` | Testing whether income explains the gap |
+| `05_denial_reasons` | Why applications get denied and whether housing types explains it |
+| `06_export.sql` | Building the file the dashboard runs on |
 
 
 
