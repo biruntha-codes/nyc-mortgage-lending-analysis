@@ -2,7 +2,7 @@
 
 **A denial reason analysis of 2025 HMDA lending data**
 
-SQL Tableau 116,940 applications
+SQL · Tableau · 116,940 applications
 
 **[View the dashboard](https://public.tableau.com/views/WhereMortgageApplicationsFailinNewYork/Dashboard1)**
 
@@ -13,14 +13,14 @@ SQL Tableau 116,940 applications
 ## Executive Summary
 
 In most of New York's counties, mortgage applications are denied because of the 
-borrower's finances. In the Bronx that is not the case.
+borrower's finances. In New York City that is not the case.
 
 The Bronx has the highest mortgage denial rate of any county at 21.3%. 
 Income does not explain it. The gap against Suffolk County is there at every
 income level. Credit history does not explain it either since it accounts for
 about 9% of denials in both places.
 
-The difference is the property. 8.7% of bronx applications are denied over
+The difference is the property. 8.7% of Bronx applications are denied over
 collateral which means the appraisal came in below the agreed price.
 In Suffolk it is 1.3%.
 
@@ -42,10 +42,10 @@ it.
 
 ---
 
-# Data
+## Data
 
 2025 HMDA Loan/Application Register, published by the CFPB in April 2026. 
-Pulled from the Data Browser API, filtered to New York state and action codes
+Pulled from the Data Browser API, filtered to New York State and action codes
 1, 2 and 3.
 
 | | Records |
@@ -124,7 +124,7 @@ That was the first thing I checked, it is not.
 | Household Income | Bronx | Suffolk | Ratio |
 |---|---|---|---|
 | under $50k | 56.3% | 49.0% | 1.1x|
-| $50-$100k | 30.1% | 17.9% | 1.77x |
+| $50-$100k | 30.1% | 17.9% | 1.7x |
 | $100-$150k | 21.1% | 8.1% | 2.6x |
 | $150-$250k | 14.3% | 6.0% | 2.4x |
 | $250k+ | 12.4% | 5.8% | 2.1x|
@@ -156,18 +156,119 @@ The property.
 The two biggest reasons swap places. In Suffolk, most denials come down to 
 affordability. In the Bronx, most come down to the appraisal.
 
-As a share of all applications rather than of denials, 8.7% of Bronx applications arew denied over collateral, against 1.3% in Suffolk.
+As a share of all applications rather than of denials, 8.7% of Bronx applications are denied over collateral, against 1.3% in Suffolk.
 Comparing single family homes only, which rules out the Bronx's multi unit
-housing stock, the gao widens to 11.2% against 1.3%.
+housing stock, the gap widens to 11.2% against 1.3%.
 
 This is not limited to the Bronx. Manhattan at 7.0%, Queens at 5.7% and
-Brooklyn 5.1% are all above every suburban cointy. The Bronx is the most
+Brooklyn 5.1% are all above every suburban county. The Bronx is the most
 extreme case.
 
-__
+---
 
 ## Things I Got Wrong or Did Not Expect
 
+My first pass gave a 24% denial rate, which seemed too high. Home improvement
+loans were pushing it up and they judged on different criteria. That made me
+reconsider what population I was measuring.
 
+I also expected the boroughs to have the most applications. They do not. In the
+raw file, Suffolk and Nassau each have more mortgage applications than any
+borough and Manhattan has fewer than Rochester. New York Ciry is mostly
+renters and co-ops which neither appears much in this data.
+
+---
+
+## What I would Recommend
+
+**Track collateral denials as a separate measure.** An overall denial rate
+treats an application that fails early as the same as one that fails at the
+appraisal. The second is more expensive because the credit pull, underwriting
+time and appraisal have already been paid for.
+
+**Get a valuation earlier in markets like the Bronx.** If appraisals are causing
+8% of applications to fail, an automated valuation at the start would identify
+the problem before those costs are incurred.
+
+**Set expectations with borrowers in these markets.** A buyer with strong
+finances in the Bronx still faces the real appraisal risk. That concern is worth
+raising early rather than late in the process.
+
+---
+
+## What This Cannot Tell You
+
+A collateral denial means the appraisal came in below the contract price. The
+data does not say why. Possible explanations include limited comparable sales, 
+property condition, buyers agreeing to prices the market will not support or
+valuation practices.
+
+Distinguishing between them would require appraisal level data with comparable
+sales which is not publicly available.
+
+---
+
+## Next Steps
+
+**Lender level.** Each record identifies the institution that received the
+application. This would show whether the collateral gap is spread across each
+lender in the Brox or concentrated in a few areas.
+
+**Loan-to-value.** If Bronx buyers are putting down less that would partly
+explain collateral denials. It is the next objection someone would raise.
+
+**Multi-year.** The Data Browser API covers 2018 to 2025 in this format, which
+would show whether the gap is widening or narrowing.
+
+## Tools
+
+SQL (SQLite) + Tableau Public + Git
+
+## Reproducing This
+
+Pull the data:
+
+```
+curl -L "https://ffiec.cfpb.gov/v2/data-browser-api/view/csv?years=2025&states=NY&actions_taken=1,2,3" -o data/hmda_ny_2025.csv
+```
+
+Load it:
+
+```
+sqlite3 hmda.db
+.import --csv data/hmda_ny_2025.csv lar
+.quit
+```
+
+```
+sqlite3 hmda.db < sql/01_profile.sql
+sqlite3 hmda.db < sql/02_clean.sql
+sqlite hmda.db < sql/03_denial_rate.sql
+sqlite hmda.db < sql/04_income_bands.sql
+sqlite hmda.db < sql/05_denial_reasons.sql
+```
+
+Build the dashboard file: 
+
+```
+sqlite3 hmda.db -header -csv < sql/06_export.sql > tableau/dashboard_data.csv
+```
+
+The raw CSV and the SQLite database are not in this repo. Both rebuild from the
+first command.
+
+| File | What it does |
+|---|---|---|
+| '01_profile.sql' | What is in the raw file before filtering |
+| '02_clean.sql' | Narrowing to home purchase loans people will live in |
+| '03_denial_rate.sql' | Denial rate by county |
+| '04_income_bands.sql' | Testing whether income explains the gap |
+| '05_denial_reasons' | Why applications get denied and whether housing types
+explains it |
+| '06_export.sql' | Building the file the dashboard runs on |
+
+
+
+ 
 
 
